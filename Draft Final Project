@@ -1,0 +1,56 @@
+#Bethany Mehring
+#2/13/2022
+import json, requests #importing json and requests
+
+apiKey="" #my api key given to me by openweather intentionally left out of this post
+
+def getWeatherZipcode(zipcode):#getting the correct url 
+    url = 'http://api.openweathermap.org/data/2.5/weather?zip=%s&appid=%s' % (zipcode, apiKey) 
+    return url
+
+def getWeatherCity(city):#getting the correct url 
+    url = 'http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s' % (city, apiKey)
+    return url
+
+
+def main():
+    while True: #conditional loop
+        options=input("Hello, please enter city or zipcode: ")
+        if options.isnumeric(): #if opetion is of a numeric value enter it into the zipcode function
+            url=getWeatherZipcode(options)
+
+        else : #otherise assume it's a city and search by city name
+            url=getWeatherCity(options)
+
+        r= requests.get(url)#importing requests
+
+        try: #check if it is succesful or not
+            r.raise_for_status()
+            print("That entry was valid")
+        except:
+            print("That entry was invalid")
+            main() #take them to the beginning if invalid
+
+        #pull the data and find temp. calculate it from kelvin to fahrenheit
+        data = requests.get(url).json()
+        temp = data['main']['temp']
+        calcFahrenheit= temp*1.8-459.67
+        format_calcFahrenheit="{:.2f}".format(calcFahrenheit)
+        
+        #find wind speed convert from meter per second to mph
+        wind = data['wind']['speed']
+        calcWind= wind*2.237
+        format_calcWind="{:.2f}".format(calcWind)
+
+        #display the data
+        print(f'Temperature is: '+format_calcFahrenheit +' degrees Fahrenheit')
+        print(f'Windspeed is: '+format_calcWind+' MPH' )
+
+        #prompting if user would like to go again. Taking them to the start of main if they do or exiting application
+        again= input('Would you like to enter a new location? Please answer with yes or no: ')
+        if again=='yes':
+            main()
+        if again=='no':
+            exit()
+
+main()
