@@ -2,7 +2,7 @@
 #3/5/2022
 import json, requests #importing json and requests
 
-apiKey="df32c877a35b1e307bd91cc4f3ffb205" #my api key given to me by openweather
+apiKey="" #my api key given to me by openweather *purposely left out
 
 def get_weather_zipcode(zipcode):#getting the correct url 
     url = 'http://api.openweathermap.org/data/2.5/weather?zip=%s&appid=%s' % (zipcode, apiKey) 
